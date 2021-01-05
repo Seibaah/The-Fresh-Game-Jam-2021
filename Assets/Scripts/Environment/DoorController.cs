@@ -6,7 +6,7 @@ public class DoorController : MonoBehaviour
 {
     private Animator doorAnimator;
     private GameObject player;
-    private float interactDistance = 3f;  // interaction distance for the opening of door
+    private float interactDistance = 4.4f;  // interaction distance for the opening of door
 
     // Start is called before the first frame update
     void Start()
