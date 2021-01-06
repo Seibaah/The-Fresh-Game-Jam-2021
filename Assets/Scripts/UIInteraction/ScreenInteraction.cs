@@ -5,46 +5,62 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ScreenInteraction : MonoBehaviour {
-    public Camera OverlookingCamera;
+    public int MaxInteractableDistance = 5;
+    public Camera HoveringCamera;
+    public Camera ExitCamera;
 
     private GraphicRaycaster mRaycaster;
     private PointerEventData mPointerEventData;
     private EventSystem mEventSystem;
+    private Button ExitButton;
 
     public void Start() {
+        if (HoveringCamera == null) Debug.Log("ScreenInteraction @ " + this.name + " : HoveringCamera not specified");
+        if (ExitCamera == null) Debug.Log("ScreenInteraction @ " + this.name + " : ExitCamera not specified");
+
         mRaycaster = GetComponent<GraphicRaycaster>();
         mEventSystem = GetComponent<EventSystem>();
-    }
-    
-
-    public void Update() {
-        if (Input.GetKey(KeyCode.Mouse0)) {
-            mPointerEventData = new PointerEventData(mEventSystem);
-            mPointerEventData.position = Input.mousePosition;
-
-            List<RaycastResult> results = new List<RaycastResult>();
-
-            mRaycaster.Raycast(mPointerEventData, results);
-
-            foreach (RaycastResult result in results) {
-                if (result.gameObject.transform.IsChildOf(this.transform)) {
-                    this.OnStartInteraction();
-                    Debug.Log("Canvas Hit");
-                }
-            }
-        }
+        ExitButton = this.transform.Find("ExitButton").gameObject.GetComponent<Button>();
+        ExitButton.onClick.AddListener(onExitButtonClicked);
     }
 
     public void OnStartInteraction() {
         // if there is no camera overlooking the UI, then do nothing
-        if (OverlookingCamera == null) return;
+        if (HoveringCamera == null) return;
 
         // otherwise, switch to this camera
-        OverlookingCamera.enabled = true;
-        
+        switchToCamera(HoveringCamera);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void onExitInteraction() {
+        Camera targetCamera = ExitCamera;
+
+        if (targetCamera == null) targetCamera = Camera.main;
+
+        switchToCamera(targetCamera);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void switchToCamera(Camera targetCamera) {
+        if (targetCamera == null) return;
+
+        targetCamera.enabled = true;
+        targetCamera.tag = "MainCamera";
+
         foreach (Camera camera in Camera.allCameras) {
-            if (camera != OverlookingCamera)
+            if (camera != targetCamera) {
                 camera.enabled = false;
+                camera.tag = "Untagged";
+            }
         }
+    }
+
+    public void onExitButtonClicked() {
+        onExitInteraction();
     }
 }

@@ -2,20 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class RaycastInteractionManager : MonoBehaviour{
     public int MaximumInteractingDistance = 10;
 
-    // Start is called before the first frame update
-    private void Start() {
-
-    }
-
     private void Update() {
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) && Cursor.lockState == CursorLockMode.Locked) {
             AttemptInteractWithScreen();
         }
     }
@@ -26,33 +23,22 @@ public class RaycastInteractionManager : MonoBehaviour{
     /// </summary>
     /// <returns>true if successfully initiated </returns>
     private bool AttemptInteractWithScreen() {
-        //Debug.Log("Interaction Attempt Triggered");
 
-        PointerEventData cursor = new PointerEventData(EventSystem.current);
-        cursor.position = Input.mousePosition;
-        List<RaycastResult> objectsHit = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(cursor, objectsHit);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit);
+        // Debug.Log("RayCast Hit" + hit.transform.gameObject);
 
-        if (objectsHit.Count > 0) {
-            //GameObject objectHit = 
-            //var objectTransformHit = hit.transform;
-            //var hitObject = objectTransformHit.gameObject;
+        // attempt to interact with the screen
+        ScreenInteraction screen;
+        if (hit.transform.parent != null) screen = hit.transform.parent.GetComponent<ScreenInteraction>();
+        else return false;
 
-            // see if it is a screen
-            //ScreenInteraction screen = hitObject.GetComponent<ScreenInteraction>();
-            //if (screen == null) // interaction failed: not a screen
-                return false;
-
-            //if (hit.distance <= MaximumInteractingDistance) {
-                //screen.OnStartInteraction();
-                //return true;
-            //}
-            
-            //return false;
-
+        if (screen != null && hit.distance <= MaximumInteractingDistance) {
+            screen.OnStartInteraction();
+            return true;
         }
 
-        // interaction failed: no target found
         return false;
     }
 }
