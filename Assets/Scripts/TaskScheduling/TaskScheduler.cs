@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class TaskScheduler : MonoBehaviour
 {
     public TaskEvent taskEventPrefab;
+    public Text taskListText; //List of active tasks will be updated here
+
     public float timeInterval;
     public float minTimeToComplete;
     public float maxTimeToComplete;
-    public List<Task> allTasks; //select tasks from this list
+    public List<Task> allTasks; //tasks are selected from this list
     public List<TaskEvent> taskEventList = new List<TaskEvent>();
 
     private float timeElapsed = 0f;
@@ -22,21 +25,21 @@ public class TaskScheduler : MonoBehaviour
              //if there are no available tasks, try again at next interval
              Task tempTask = FindAvailableTask();
              if (tempTask != null) {
-                taskEventList.Add(InstantiateTaskEvent());
+                taskEventList.Add(InstantiateTaskEvent(tempTask));
+                UpdateTaskListText();
              }
              timeElapsed = 0;
          }
     }
 
-    private TaskEvent InstantiateTaskEvent() {
+    private TaskEvent InstantiateTaskEvent(Task task) {
         TaskEvent newTaskEvent = Instantiate(taskEventPrefab, this.transform);
 
         newTaskEvent.endDelegate = TaskEventFinished;
-        newTaskEvent.task = allTasks[Random.Range(0, allTasks.Count)];
-        newTaskEvent.message = "The task '" + newTaskEvent.task.taskName + "' needs to be done.";
+        newTaskEvent.task = task;
+        newTaskEvent.message = "Complete " + newTaskEvent.task.taskName;
         newTaskEvent.timeToComplete = Random.Range(minTimeToComplete, maxTimeToComplete);
         newTaskEvent.priority = 1;
-        print(newTaskEvent.message);
 
         return newTaskEvent;
     }
@@ -46,6 +49,7 @@ public class TaskScheduler : MonoBehaviour
         print(taskEvent.name + " was successful: " + taskEvent.IsSuccessful());
         taskEventList.Remove(taskEvent);
         Destroy(taskEvent.gameObject);
+        UpdateTaskListText();
     }
 
     //find first available task, return null if there are none
@@ -56,6 +60,16 @@ public class TaskScheduler : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void UpdateTaskListText() {
+        string taskListString = "";
+        foreach (TaskEvent taskEvent in taskEventList) {
+            taskListString += " - ";
+            taskListString += taskEvent.message; 
+            taskListString += "\n";
+        }
+        taskListText.text = taskListString;
     }
 
 }
