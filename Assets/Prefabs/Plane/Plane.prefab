@@ -901,9 +901,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1539941893786579540}
   - component: {fileID: 1539941893779119030}
-  - component: {fileID: 1766039679709904183}
   - component: {fileID: 694121973098939964}
   - component: {fileID: 724823252955359960}
+  - component: {fileID: 462227606}
+  - component: {fileID: 1834790324}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -955,19 +956,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &1766039679709904183
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1539941893786427720}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.5476403, y: 3.9968014, z: 21.190653}
-  m_Center: {x: 0.05594623, y: 1.9867384, z: -0.6437769}
 --- !u!65 &694121973098939964
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -979,8 +967,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 24.724907, y: 2.3042552, z: 6.2861624}
-  m_Center: {x: -0.022458058, y: 1.0379611, z: 2.6682181}
+  m_Size: {x: 24.041815, y: 0.7800598, z: 6.286175}
+  m_Center: {x: -0.06908124, y: 1.0752373, z: 2.6682124}
 --- !u!54 &724823252955359960
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -995,5 +983,31 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 64
   m_CollisionDetection: 0
+--- !u!114 &462227606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539941893786427720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d585a9583c48a48efa7857d5167caf41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!136 &1834790324
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539941893786427720}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 2.1529694
+  m_Height: 21.121565
+  m_Direction: 2
+  m_Center: {x: 0.035788514, y: 1.9543152, z: -0.6994609}
