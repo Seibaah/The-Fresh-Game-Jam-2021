@@ -15,7 +15,6 @@ public class SampleTask : Task
 
     public override void TaskSetup()
     {
-        print("Sample task setup!");
     }
 
 }
