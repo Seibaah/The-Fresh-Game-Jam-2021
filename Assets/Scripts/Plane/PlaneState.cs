@@ -6,12 +6,15 @@
 /// </summary>
 public enum PlaneState
 {
-    FLYING = 0,  
-    LANDING = 1,  // when the plane is performing landing action
-    STOP_ON_LAND = 2,  // post-state after landing 
-    TAKING_OFF = 3,  // when the plane is performing taking off action
-    FINISHED_TAKING_OFF = 4,  // post-state after taking off is done
-    CIRCLING = 5,
-    DESTROYED
+    FOLLOWING_PATH = 0,
+    READY_TO_LAND = 1,  // when the plane is on the "landing point"
+    LANDING = 2,  // when the plane is performing landing action
+    STOP_ON_LAND = 3,  // post-state after landing 
+    TAKING_OFF = 4,  // when the plane is performing taking off action
+    FINISHED_TAKING_OFF = 5,  // post-state after taking off is done
+    READY_TO_CIRCLING = 6,
+    CIRCLING = 7,
+    DESTROYED = 8,
+    START = 9,  // initial state after the plane is generated
 
 }
