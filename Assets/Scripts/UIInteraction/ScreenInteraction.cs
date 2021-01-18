@@ -9,6 +9,8 @@ public class ScreenInteraction : MonoBehaviour {
     public Camera HoveringCamera;
     public Camera ExitCamera;
 
+    public string IgnoreCameraWithTag = "UtilityCamera";
+
     private GraphicRaycaster mRaycaster;
     private PointerEventData mPointerEventData;
     private EventSystem mEventSystem;
@@ -53,7 +55,7 @@ public class ScreenInteraction : MonoBehaviour {
         targetCamera.tag = "MainCamera";
 
         foreach (Camera camera in Camera.allCameras) {
-            if (camera != targetCamera) {
+            if (camera != targetCamera && camera.gameObject.tag != IgnoreCameraWithTag) {
                 camera.enabled = false;
                 camera.tag = "Untagged";
             }
