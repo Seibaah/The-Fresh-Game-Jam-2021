@@ -1221,6 +1221,7 @@ MonoBehaviour:
   MaxInteractableDistance: 5
   HoveringCamera: {fileID: 1911054988}
   ExitCamera: {fileID: 71295783}
+  IgnoreCameraWithTag: UtilityCamera
 --- !u!1 &376171007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1977,6 +1978,7 @@ MonoBehaviour:
   MaxInteractableDistance: 5
   HoveringCamera: {fileID: 911308685}
   ExitCamera: {fileID: 71295783}
+  IgnoreCameraWithTag: UtilityCamera
 --- !u!1 &523561706
 GameObject:
   m_ObjectHideFlags: 0
@@ -3779,6 +3781,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 20724644957976244, guid: 2e62f5703e5f8d2488a5e1bc8433be41,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 114051214696948948, guid: 2e62f5703e5f8d2488a5e1bc8433be41,
         type: 3}
       propertyPath: mouseSensitivity
@@ -4073,7 +4080,7 @@ GameObject:
   - component: {fileID: 1340326369}
   m_Layer: 0
   m_Name: Mini-Map Projection Camera
-  m_TagString: Untagged
+  m_TagString: UtilityCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4117,7 +4124,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 65
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 9f8e8eae340a0f9478de4fb71ed86a0d, type: 2}
   m_TargetDisplay: 0
@@ -4988,6 +4995,7 @@ MonoBehaviour:
   MaxInteractableDistance: 5
   HoveringCamera: {fileID: 376171009}
   ExitCamera: {fileID: 71295783}
+  IgnoreCameraWithTag: UtilityCamera
 --- !u!1001 &1792652040
 PrefabInstance:
   m_ObjectHideFlags: 0
