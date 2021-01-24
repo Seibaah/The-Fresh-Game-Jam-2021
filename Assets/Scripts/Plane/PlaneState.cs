@@ -16,5 +16,6 @@ public enum PlaneState
     CIRCLING = 7,
     DESTROYED = 8,
     START = 9,  // initial state after the plane is generated
+    PARKING = 10  // state when the plane on parking spot
 
 }

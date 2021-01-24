@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour
 {
-    public float flyingForce = 20f;  // the force apply to this plane when flying
+    // Public fields:
+    [Header("Plane Motion Settings")]
+    public float flyingSpeed = 40f;  // the speed of this plane when flying
+    public float flyingForce = 20f;  // the force apply to this plane when landing and taking off
     public float slidingForce = 12f;  // the force applyig to this plane when sliding on the ground
     public float slidingDistance = 30f;  // the distance of sliding
+    public float circlingSpeed = 40f;   // the angular speed of circling (degrees/second).
     public float gas_limit_time = 40f;  // the time (in seconds) before this plane becomes out of gas
 
-    public PlaneState currentState { get; set; }  // the current state of this plane
 
+    // Private fields:
+    private PlaneState currentState { get; set; }  // the current state of this plane
     private Rigidbody rb;  // the rigidbody component of this plane
+    private ParkingSpotManager psManager;  // the instance of ParkingSpotManager script
 
     // Variable for the plane motion:
     private Vector3 prevPosition;  // used for adjusting facing direction
-    private bool isFollowingPath;  // whether the plane is following a path
     private Coroutine currentMovingCoroutine;  // the current FollowPath coroutine or the Circling coroutine
     private float gasTimer = 0;  // the timer for counting the gas of this plane
     
@@ -32,7 +37,7 @@ public class Plane : MonoBehaviour
         // initialize the variable fields
         rb = this.GetComponent<Rigidbody>();
         currentState = PlaneState.START;  // initial state
-
+        psManager = GameObject.Find("ParkingSystem").GetComponent<ParkingSpotManager>();  // Find instance of ParkingSpotManager script
         /*
         // testing following a path
         List<Vector3> path = new List<Vector3>();
@@ -47,48 +52,12 @@ public class Plane : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        /*
-        // For testing landing + take off + circling
-        if(currentState == PlaneState.FLYING)
-        {
-            landing(groundLevel);
-        }
-        else if(currentState == PlaneState.STOP_ON_LAND)
-        {
-            takeOff(desiredHeight);
-        }
-        else if(currentState == PlaneState.FINISHED_TAKING_OFF)
-        {
-            circling(20f, this.transform.position + this.transform.forward * 10);
-            Destroy(this.gameObject, 21);
-        }
-        */
-
-        /*
-        // Fot testing 
-        if (currentState == PlaneState.READY_TO_LAND)
-        {
-            landing(groundLevel);
-        }
-        else if (currentState == PlaneState.STOP_ON_LAND)
-        {
-            takeOff(desiredHeight);
-        }
-        else if (currentState == PlaneState.READY_TO_CIRCLING)
-        {
-            float range = 50f;
-            // randomly pick a center point around the plane for circling
-            Vector2 randomPoint = Random.insideUnitCircle;
-            circling(this.transform.position + new Vector3(randomPoint.x, 0 , randomPoint.y) * range);
-            //Destroy(this.gameObject, 21);
-        }*/
-
         // Update gas timer
         gasTimer += Time.deltaTime;
         checkGas();  // check the gas timer
 
         // The State Machine of this plane
-        // When the plane is just generated
+        // when the plane is just generated
         if (currentState == PlaneState.START)
         {
             float airportRange = 190f;  // the approx radius of airport map
@@ -106,6 +75,7 @@ public class Plane : MonoBehaviour
         else if(currentState == PlaneState.READY_TO_CIRCLING)
         {
             float range = 50f;
+
             // randomly pick a center point around the plane for circling
             Vector2 randomPoint = Random.insideUnitCircle;
             circling(this.transform.position + new Vector3(randomPoint.x, 0, randomPoint.y) * range);
@@ -115,19 +85,45 @@ public class Plane : MonoBehaviour
         {
             landing(groundLevel);
         }
-        // when the plane is ready to teleport to the garage
+        // when the plane is ready to teleport to the parking spot
         else if(currentState == PlaneState.STOP_ON_LAND)
         {
-            // TODO: goto garage
+            // Goto parking spot
+            Vector3 parkingSpotPosition = psManager.findParkingSpot();
+
+            // findParkingSpot() will return Vector3.zero when no available parking spot
+            if (parkingSpotPosition != Vector3.zero)
+            {
+                this.transform.position = parkingSpotPosition;
+                currentState = PlaneState.PARKING;  // change the state of plane to PARKING
+            }
         }
         else if(currentState == PlaneState.FINISHED_TAKING_OFF)
         {
+            float delay = 4f;
+
             // destroy this plane after a delay
-            Destroy(this.gameObject, 5f);
+            Destroy(this.gameObject, delay);
         }
 
 
+        // for testing landing
+        if(gasTimer >= 5)
+        {
+            Vector3 landingPoint = new Vector3(206,82,-113.5f);
+            Vector3 runway1Position = new Vector3(-4.2f,2,-17.8f);
 
+            List<Vector3> path = new List<Vector3>();
+            path.Add(landingPoint);  // let the end point be a landing point
+            followPath(path, true, runway1Position); 
+        }
+        
+        // for testing taking off
+        if (gasTimer >= 40 && currentState == PlaneState.PARKING)
+        {
+            Vector3 startPoint1 = new Vector3(122, 2, -73);
+            takeOff(desiredHeight, startPoint1);
+        }
 
     }
 
@@ -152,19 +148,19 @@ public class Plane : MonoBehaviour
     /// </summary>
     /// <param name="direction"></param>
     /// <param name="force"></param>
-    private void moveInDirection(Vector3 targetDirection, float force)
+    private void moveInDirectionWithForce(Vector3 targetDirection, float force)
     {
-
         this.rb.AddForce(targetDirection * force);  // apply force of x-z direction
-        //this.rb.velocity = targetDirection * force;
+    }
 
-        /*
-        // change the facing direction of this plane based on the current velocity
-        Vector3 facingDirection = rb.velocity;
-        facingDirection.y = 0;
-        transform.forward = rb.velocity;
-        */
-
+    /// <summary>
+    /// Funtion for this plane to move toward a given direction with a given speed 
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="speed"></param>
+    private void moveInDirectionWithSpeed(Vector3 targetDirection, float speed)
+    {
+        this.rb.velocity = targetDirection * speed;
     }
 
 
@@ -175,19 +171,23 @@ public class Plane : MonoBehaviour
     private void faceTo(Vector3 destination)
     {
         transform.forward = new Vector3(destination.x, 0, destination.z);
-    }    
+    }
 
 
     /// <summary>
     /// Function for this plane to perform takeOff action (along the current facing direction) until reaching the desired height
     /// </summary>
     /// <param name="desiredHeight">the desired height of this plane will reach after taking-off is done</param>
-    public void takeOff(float desiredHeight)
+    /// <param name="startPoint">the start point of the runway for takingoff</param>
+    public void takeOff(float desiredHeight, Vector3 startPoint)
     {
-        // TODO: teleport to a run way
+        this.gasTimer = -Mathf.Infinity; // reset the timer to -infinity, since we don't care about the gas after the plane has taken off
+
+        // teleport to a run way
+        this.transform.position = startPoint;
 
         currentState = PlaneState.TAKING_OFF;
-        StartCoroutine(SmoothTakeOff(desiredHeight));  // start the coroutine
+        currentMovingCoroutine = StartCoroutine(SmoothTakeOff(desiredHeight));  // start the coroutine
     }
 
 
@@ -205,7 +205,7 @@ public class Plane : MonoBehaviour
         while (slidedDistance < slidingDistance)
         {
             targetDirection.y = 0;  // reset the vertical direction, since we want to move on x-z plane
-            moveInDirection(targetDirection, slidingForce);
+            moveInDirectionWithForce(targetDirection, slidingForce);
 
             slidedDistance += (this.transform.position - currentPos).magnitude;  // update the slided distance
             currentPos = this.transform.position;
@@ -226,7 +226,7 @@ public class Plane : MonoBehaviour
                 targetDirection.y += Time.deltaTime;
             }
 
-            moveInDirection(targetDirection, flyingForce);
+            moveInDirectionWithForce(targetDirection, flyingForce);
 
             // Yielding of any type, including null, results in the execution coming back on a later frame (next frame)
             //yield return null;
@@ -244,7 +244,7 @@ public class Plane : MonoBehaviour
     private void landing(float groundLevel)
     {
         currentState = PlaneState.LANDING;
-        StartCoroutine(SmoothLanding(groundLevel));  // start the coroutine
+        currentMovingCoroutine = StartCoroutine(SmoothLanding(groundLevel));  // start the coroutine
     }
 
     //Co-routine for take off function
@@ -267,7 +267,7 @@ public class Plane : MonoBehaviour
                 currentFlyingForce -= Time.deltaTime * 4;
             }
             //Debug.Log(targetDirection);
-            moveInDirection(targetDirection.normalized, currentFlyingForce);
+            moveInDirectionWithForce(targetDirection.normalized, currentFlyingForce);
 
             // Yielding of any type, including null, results in the execution coming back on a later frame (next frame)
             //yield return null;
@@ -282,7 +282,7 @@ public class Plane : MonoBehaviour
         while(slidedDistance < slidingDistance)
         {
             targetDirection.y = 0;  // reset the vertical direction, since we want to move on x-z plane
-            moveInDirection(targetDirection, slidingForce);
+            moveInDirectionWithForce(targetDirection, slidingForce);
 
             slidedDistance += (this.transform.position - currentPos).magnitude;  // update the slided distance
             currentPos = this.transform.position;
@@ -291,6 +291,8 @@ public class Plane : MonoBehaviour
             //yield return null;
             yield return new WaitForFixedUpdate();
         }
+
+        yield return new WaitUntil(() => this.rb.velocity == Vector3.zero); // wait until the plane is fully stopped
 
         currentState = PlaneState.STOP_ON_LAND;  // update the plane state
     }
@@ -320,8 +322,8 @@ public class Plane : MonoBehaviour
         {
             //timer += Time.deltaTime;  // update the timer
 
-            // make plane circle around the center at 35 degrees/second.
-            transform.RotateAround(center, Vector3.up, 35 * Time.deltaTime);
+            // make plane circle around the center by a circlingSpeed
+            transform.RotateAround(center, Vector3.up, circlingSpeed * Time.deltaTime);
 
             // Adjust the facing direction of plane
             Vector3 deltaPosition = transform.position - prevPosition;  // Calculate position change between frames
@@ -337,7 +339,7 @@ public class Plane : MonoBehaviour
         }
 
         // enable the gravity when finish circling
-        this.rb.useGravity = true;
+        //this.rb.useGravity = true;
 
         //currentState = PlaneState.FLYING;
     }
@@ -372,6 +374,13 @@ public class Plane : MonoBehaviour
                 currentState = PlaneState.FOLLOWING_PATH;
                 currentMovingCoroutine = StartCoroutine(FollowPath(path, isDestLandingPoint, runwayPosition));  // start the FollowPath coroutine
             }
+            else if(currentState == PlaneState.START)  // when the plane is just generated
+            {
+                currentState = PlaneState.FOLLOWING_PATH;
+                currentMovingCoroutine = StartCoroutine(FollowPath(path, isDestLandingPoint, runwayPosition));  // start the FollowPath coroutine
+            }
+
+            // otherwise (plane is in other states), do nothing
         }
     }
 
@@ -382,7 +391,7 @@ public class Plane : MonoBehaviour
         this.rb.useGravity = false;
 
         Vector3 direction;
-        float epsilon = 1f;  // the epsilon for checking the distance
+        float epsilon = 0.8f;  // the epsilon for checking the distance
 
         // moving along the given path
         foreach(Vector3 destination in path)
@@ -396,7 +405,7 @@ public class Plane : MonoBehaviour
             // keep moving until reaching the destination
             while (Vector3.Distance(destination, this.transform.position) > epsilon)
             {
-                moveInDirection(direction, flyingForce);  // move toward the destination
+                moveInDirectionWithSpeed(direction, flyingSpeed);  // move toward the destination
                 yield return new WaitForFixedUpdate();
             }
             this.rb.velocity = Vector3.zero;  // reset the current velocity to 0 when turning to the next destination (for cancel previous force applied to the plane)
@@ -432,14 +441,12 @@ public class Plane : MonoBehaviour
         // when this plane is colliding with another plane
         if(collision.gameObject.tag == "Plane")
         {
-            /*
-            // if the plane is following a path
-            if(isFollowingPath)
-            {
-                // stop the FollowPath coroutine
-                StopCoroutine(currentFollowPathCoroutine);
-            }*/
-            // TODO: action after colliding: falling to the ground?
+            // Stop the FollowPath coroutine
+            StopCoroutine(currentMovingCoroutine);
+
+            // Let the plane falling to the ground
+            this.currentState = PlaneState.DESTROYED;  // change the plane state
+            this.rb.useGravity = true;  // apply gravity
 
 
             // TODO: notify the game flow manager maybe
