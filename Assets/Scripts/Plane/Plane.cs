@@ -12,7 +12,8 @@ public class Plane : MonoBehaviour
     public float slidingDistance = 30f;  // the distance of sliding
     public float circlingSpeed = 40f;   // the angular speed of circling (degrees/second).
     public float gas_limit_time = 40f;  // the time (in seconds) before this plane becomes out of gas
-
+    [Header("Test")]
+    public bool testMode = false;  // turn on/off the test mode for landing and taking-off
 
     // Private fields:
     private PlaneState currentState { get; set; }  // the current state of this plane
@@ -38,25 +39,18 @@ public class Plane : MonoBehaviour
         rb = this.GetComponent<Rigidbody>();
         currentState = PlaneState.START;  // initial state
         psManager = GameObject.Find("ParkingSystem").GetComponent<ParkingSpotManager>();  // Find instance of ParkingSpotManager script
-        /*
-        // testing following a path
-        List<Vector3> path = new List<Vector3>();
-        path.Add(new Vector3(180, 82.2f, -60));
-        path.Add(new Vector3(68, 82.2f, -100));
-        path.Add(new Vector3(150, 82.2f, -170));
-        path.Add(new Vector3(207.53f, 82.2f, -113.52f));
-        followPath(path, false, new Vector3(-4.2f, 2, -17.8f));
-        */
     }
 
-    // Update is called once per frame
+    // FixedUpdate is called once per frame
     void FixedUpdate()
     {
         // Update gas timer
         gasTimer += Time.deltaTime;
         checkGas();  // check the gas timer
 
+        // -------------------------------------
         // The State Machine of this plane
+        // -------------------------------------
         // when the plane is just generated
         if (currentState == PlaneState.START)
         {
@@ -105,25 +99,31 @@ public class Plane : MonoBehaviour
             // destroy this plane after a delay
             Destroy(this.gameObject, delay);
         }
+        // -------------------------------------
+        // -------------------------------------
 
-
-        // for testing landing
-        if(gasTimer >= 5)
+        #region Landing&Taking-off test
+        if(testMode)
         {
-            Vector3 landingPoint = new Vector3(206,82,-113.5f);
-            Vector3 runway1Position = new Vector3(-4.2f,2,-17.8f);
+            // for testing landing
+            if (gasTimer >= 5)
+            {
+                Vector3 landingPoint = new Vector3(206, 82, -113.5f);
+                Vector3 runway1Position = new Vector3(-4.2f, 2, -17.8f);
 
-            List<Vector3> path = new List<Vector3>();
-            path.Add(landingPoint);  // let the end point be a landing point
-            followPath(path, true, runway1Position); 
+                List<Vector3> path = new List<Vector3>();
+                path.Add(landingPoint);  // let the end point be a landing point
+                followPath(path, true, runway1Position);
+            }
+
+            // for testing taking off
+            if (gasTimer >= 40 && currentState == PlaneState.PARKING)
+            {
+                Vector3 startPoint1 = new Vector3(122, 2, -73);
+                takeOff(desiredHeight, startPoint1);
+            }
         }
-        
-        // for testing taking off
-        if (gasTimer >= 40 && currentState == PlaneState.PARKING)
-        {
-            Vector3 startPoint1 = new Vector3(122, 2, -73);
-            takeOff(desiredHeight, startPoint1);
-        }
+        #endregion
 
     }
 
@@ -140,6 +140,9 @@ public class Plane : MonoBehaviour
             StopCoroutine(currentMovingCoroutine);
             this.currentState = PlaneState.DESTROYED;
             this.rb.useGravity = true;  // apply gravity
+            // TODO: notify the task scheduler
+
+
         }
     }
 
@@ -181,13 +184,17 @@ public class Plane : MonoBehaviour
     /// <param name="startPoint">the start point of the runway for takingoff</param>
     public void takeOff(float desiredHeight, Vector3 startPoint)
     {
-        this.gasTimer = -Mathf.Infinity; // reset the timer to -infinity, since we don't care about the gas after the plane has taken off
+        // can only perform take off when the plane is parking
+        if(currentState == PlaneState.PARKING)
+        {
+            this.gasTimer = -Mathf.Infinity; // reset the timer to -infinity, since we don't care about the gas after the plane has taken off
 
-        // teleport to a run way
-        this.transform.position = startPoint;
+            // teleport to a run way
+            this.transform.position = startPoint;
 
-        currentState = PlaneState.TAKING_OFF;
-        currentMovingCoroutine = StartCoroutine(SmoothTakeOff(desiredHeight));  // start the coroutine
+            currentState = PlaneState.TAKING_OFF;
+            currentMovingCoroutine = StartCoroutine(SmoothTakeOff(desiredHeight));  // start the coroutine
+        }
     }
 
 
@@ -340,8 +347,6 @@ public class Plane : MonoBehaviour
 
         // enable the gravity when finish circling
         //this.rb.useGravity = true;
-
-        //currentState = PlaneState.FLYING;
     }
 
 
@@ -449,7 +454,7 @@ public class Plane : MonoBehaviour
             this.rb.useGravity = true;  // apply gravity
 
 
-            // TODO: notify the game flow manager maybe
+            // TODO: notify the task scheduler
 
 
         }
