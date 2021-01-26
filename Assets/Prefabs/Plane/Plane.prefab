@@ -907,7 +907,7 @@ GameObject:
   - component: {fileID: 1834790324}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Plane
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -997,6 +997,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d585a9583c48a48efa7857d5167caf41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flyingSpeed: 55
+  flyingForce: 20
+  slidingForce: 17
+  slidingDistance: 60
+  circlingSpeed: 40
+  gas_limit_time: 40
+  testMode: 0
 --- !u!136 &1834790324
 CapsuleCollider:
   m_ObjectHideFlags: 0
