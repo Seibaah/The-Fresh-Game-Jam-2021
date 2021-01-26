@@ -4311,11 +4311,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParkingSpot (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 5359296565846820792, guid: 47d4b53c83f204f019ab6398004d043c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47d4b53c83f204f019ab6398004d043c, type: 3}
 --- !u!4 &1227761474 stripped
