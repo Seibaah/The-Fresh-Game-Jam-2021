@@ -1221,6 +1221,9 @@ MonoBehaviour:
   MaxInteractableDistance: 5
   HoveringCamera: {fileID: 1911054988}
   ExitCamera: {fileID: 71295783}
+  screenID: 0
+  myCanvas: {fileID: 1136816869179302854, guid: 74a3822bd70f6be4b8ceea1802bbcae7,
+    type: 3}
 --- !u!1 &376171007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1977,6 +1980,8 @@ MonoBehaviour:
   MaxInteractableDistance: 5
   HoveringCamera: {fileID: 911308685}
   ExitCamera: {fileID: 71295783}
+  screenID: 0
+  myCanvas: {fileID: 0}
 --- !u!1 &523561706
 GameObject:
   m_ObjectHideFlags: 0
@@ -4988,6 +4993,8 @@ MonoBehaviour:
   MaxInteractableDistance: 5
   HoveringCamera: {fileID: 376171009}
   ExitCamera: {fileID: 71295783}
+  screenID: 0
+  myCanvas: {fileID: 0}
 --- !u!1001 &1792652040
 PrefabInstance:
   m_ObjectHideFlags: 0
