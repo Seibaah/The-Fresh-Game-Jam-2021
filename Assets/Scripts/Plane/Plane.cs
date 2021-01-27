@@ -11,14 +11,17 @@ public class Plane : MonoBehaviour
     public float slidingForce = 12f;  // the force applyig to this plane when sliding on the ground
     public float slidingDistance = 30f;  // the distance of sliding
     public float circlingSpeed = 40f;   // the angular speed of circling (degrees/second).
-    public float gas_limit_time = 40f;  // the time (in seconds) before this plane becomes out of gas
+
     [Header("Test")]
     public bool testMode = false;  // turn on/off the test mode for landing and taking-off
 
+    public PlaneState currentState { get; set; }  // the current state of this plane
+    public float gas_limit_time { get; set; }  // the time (in seconds) before this plane becomes out of gas
     // Private fields:
-    private PlaneState currentState { get; set; }  // the current state of this plane
     private Rigidbody rb;  // the rigidbody component of this plane
     private ParkingSpotManager psManager;  // the instance of ParkingSpotManager script
+    private TaskScheduler taskScheduler;  // the instance of TaskScheduler script
+    private PlaneTask planeTask;
 
     // Variable for the plane motion:
     private Vector3 prevPosition;  // used for adjusting facing direction
@@ -37,8 +40,12 @@ public class Plane : MonoBehaviour
     {
         // initialize the variable fields
         rb = this.GetComponent<Rigidbody>();
-        currentState = PlaneState.START;  // initial state
         psManager = GameObject.Find("ParkingSystem").GetComponent<ParkingSpotManager>();  // Find instance of ParkingSpotManager script
+        taskScheduler = GameObject.Find("TaskScheduler").GetComponent<TaskScheduler>();
+        planeTask = this.gameObject.GetComponent<PlaneTask>();
+
+        currentState = PlaneState.START;  // initial state
+        gas_limit_time = planeTask.gasTime;  // get the gas time from the task script
     }
 
     // FixedUpdate is called once per frame
@@ -140,9 +147,9 @@ public class Plane : MonoBehaviour
             StopCoroutine(currentMovingCoroutine);
             this.currentState = PlaneState.DESTROYED;
             this.rb.useGravity = true;  // apply gravity
-            // TODO: notify the task scheduler
 
-
+            // Notify the task scheduler
+            taskScheduler.planeCrashes();
         }
     }
 
@@ -453,10 +460,8 @@ public class Plane : MonoBehaviour
             this.currentState = PlaneState.DESTROYED;  // change the plane state
             this.rb.useGravity = true;  // apply gravity
 
-
-            // TODO: notify the task scheduler
-
-
+            // Notify the task scheduler
+            taskScheduler.planeCrashes();
         }
     }
 }

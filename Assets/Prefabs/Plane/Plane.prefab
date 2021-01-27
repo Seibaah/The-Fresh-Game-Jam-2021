@@ -904,6 +904,7 @@ GameObject:
   - component: {fileID: 694121973098939964}
   - component: {fileID: 724823252955359960}
   - component: {fileID: 462227606}
+  - component: {fileID: 1617506294962844682}
   - component: {fileID: 1834790324}
   m_Layer: 0
   m_Name: Plane
@@ -1002,8 +1003,20 @@ MonoBehaviour:
   slidingForce: 17
   slidingDistance: 60
   circlingSpeed: 40
-  gas_limit_time: 40
   testMode: 0
+--- !u!114 &1617506294962844682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539941893786427720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f120409b2d66408a864c1792da71bb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  taskName: PlaneLandingTask
 --- !u!136 &1834790324
 CapsuleCollider:
   m_ObjectHideFlags: 0

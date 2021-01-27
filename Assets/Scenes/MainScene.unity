@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -930,6 +930,7 @@ Transform:
   - {fileID: 940178014}
   - {fileID: 95844806}
   - {fileID: 1301429026}
+  - {fileID: 2118419659}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3871,7 +3872,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -232, y: 220}
+  m_AnchoredPosition: {x: 210, y: 119}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1.17, y: 0.5}
 --- !u!114 &1087263339
@@ -4779,7 +4780,7 @@ MonoBehaviour:
   taskEventPrefab: {fileID: 8914557492836538639, guid: f4e7270c78295a749bb2bb79ed601323,
     type: 3}
   taskListText: {fileID: 1307454027}
-  timeInterval: 10
+  timeInterval: 30
   minTimeToComplete: 60
   maxTimeToComplete: 80
   allTasks:
@@ -4794,6 +4795,11 @@ MonoBehaviour:
   - {fileID: 510635158}
   - {fileID: 171028444}
   taskEventList: []
+  planePrefab: {fileID: 1539941893786427720, guid: 51712084ccc78464aa9a1708d1303d13,
+    type: 3}
+  spawningPoint: {fileID: 2118419658}
+  spawnPlanesTimeInterval: 7
+  maxPlaneCrashes: 2
 --- !u!4 &1510528309
 Transform:
   m_ObjectHideFlags: 0
@@ -6142,7 +6148,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2077784831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6305,6 +6311,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089644355}
   m_CullTransparentMesh: 1
+--- !u!1 &2118419658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2118419659}
+  m_Layer: 0
+  m_Name: PlaneSpawningPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2118419659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118419658}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 420, y: 125, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 138243031}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2143486169
 GameObject:
   m_ObjectHideFlags: 0
@@ -6369,6 +6405,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plane
       objectReference: {fileID: 0}
+    - target: {fileID: 1539941893786427720, guid: 51712084ccc78464aa9a1708d1303d13,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1539941893786579540, guid: 51712084ccc78464aa9a1708d1303d13,
         type: 3}
       propertyPath: m_RootOrder
@@ -6377,17 +6418,17 @@ PrefabInstance:
     - target: {fileID: 1539941893786579540, guid: 51712084ccc78464aa9a1708d1303d13,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 280.1
+      value: 384.6
       objectReference: {fileID: 0}
     - target: {fileID: 1539941893786579540, guid: 51712084ccc78464aa9a1708d1303d13,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 125.7
+      value: 125
       objectReference: {fileID: 0}
     - target: {fileID: 1539941893786579540, guid: 51712084ccc78464aa9a1708d1303d13,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -183.5
+      value: -91.9
       objectReference: {fileID: 0}
     - target: {fileID: 1539941893786579540, guid: 51712084ccc78464aa9a1708d1303d13,
         type: 3}
