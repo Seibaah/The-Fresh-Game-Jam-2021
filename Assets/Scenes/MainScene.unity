@@ -588,7 +588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 75474051}
   - component: {fileID: 75474050}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MinimapCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1233,7 +1233,7 @@ GameObject:
   - component: {fileID: 376171010}
   - component: {fileID: 376171009}
   - component: {fileID: 376171008}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MiniMap Screen Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1480,7 +1480,8 @@ GameObject:
   - component: {fileID: 429899866}
   - component: {fileID: 429899868}
   - component: {fileID: 429899867}
-  m_Layer: 5
+  - component: {fileID: 429899869}
+  m_Layer: 8
   m_Name: Mini Map Raw Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1541,6 +1542,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 429899865}
   m_CullTransparentMesh: 1
+--- !u!114 &429899869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429899865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4137eff08c2052fe90004f3f7318439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoveringCamera: {fileID: 376171009}
+  projectionCamera: {fileID: 1340326370}
 --- !u!1 &483925485
 GameObject:
   m_ObjectHideFlags: 0
@@ -3298,7 +3313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &963983494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3392,6 +3407,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   taskName: Button
   complete: 0
+--- !u!1 &1032741551 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6161732901648722884, guid: afb4a701ac8df4048b1edd3f22ddc89d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6161732901691822593}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1032741552
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032741551}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 216.33429, y: 1, z: 29.494959}
+  m_Center: {x: 82.201416, y: 0, z: -0.2844823}
 --- !u!1 &1036362302
 GameObject:
   m_ObjectHideFlags: 0
@@ -3737,6 +3771,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1743903104223250, guid: 2e62f5703e5f8d2488a5e1bc8433be41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4448068258976056, guid: 2e62f5703e5f8d2488a5e1bc8433be41, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -3784,7 +3822,12 @@ PrefabInstance:
     - target: {fileID: 20724644957976244, guid: 2e62f5703e5f8d2488a5e1bc8433be41,
         type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 55
+      value: 183
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051214696948948, guid: 2e62f5703e5f8d2488a5e1bc8433be41,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114051214696948948, guid: 2e62f5703e5f8d2488a5e1bc8433be41,
         type: 3}
@@ -4167,7 +4210,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1452370061
 MonoBehaviour:
   m_ObjectHideFlags: 0

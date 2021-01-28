@@ -1,12 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class RaycastInteractionManager : MonoBehaviour{
     public int MaximumInteractingDistance = 10;
