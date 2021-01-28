@@ -26,7 +26,7 @@ public class Restart_menu : MonoBehaviour
     /*
     * @desc loads the game over menu
     */
-    void GameOver()
+    public void GameOver()
     {
         restartMenuUI.SetActive(true);
         Time.timeScale = 0f;

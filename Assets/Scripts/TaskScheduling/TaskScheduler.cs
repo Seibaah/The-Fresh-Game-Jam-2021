@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using TMPro;
 
 public class TaskScheduler : MonoBehaviour
 {
@@ -23,12 +24,20 @@ public class TaskScheduler : MonoBehaviour
     public float gas_limit_time_max = 40f;  // the max of gas limit time
 
     [Header("Game over conditions")]
+    public GameObject gameOverMenu;
     public int maxPlaneCrashes = 3;  // the limit of plane crashes allowed (if > this limit, game over)
+    public TMP_Text numCrashesMessage;
 
     private float timeElapsed = 0f;
     private float planeSpawningTimeElapsed = 0f;
 
     private int planeCrashCounter = 0;  // the counter for counting the plane crashes
+    private Restart_menu gameOverScript;
+
+    private void Start()
+    {
+        gameOverScript = gameOverMenu.GetComponent<Restart_menu>();
+    }
 
     void Update()
     {
@@ -61,9 +70,8 @@ public class TaskScheduler : MonoBehaviour
         // check for game over state
         if(planeCrashCounter > maxPlaneCrashes)
         {
-            // TODO: trigger game over
-            //Debug.Log("Game over");
-
+            // trigger game over
+            gameOverScript.GameOver();
         }
     }
 
@@ -126,6 +134,10 @@ public class TaskScheduler : MonoBehaviour
     public void planeCrashes()
     {
         planeCrashCounter++;
+        if(planeCrashCounter > maxPlaneCrashes)
+            numCrashesMessage.SetText(planeCrashCounter + " planes has crashed!\nGame Over!");
+        else
+            numCrashesMessage.SetText(planeCrashCounter + " planes has crashed!");
     }
 
 }

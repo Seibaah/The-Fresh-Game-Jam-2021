@@ -113,7 +113,7 @@ public class Plane : MonoBehaviour
         if(testMode)
         {
             // for testing landing
-            if (gasTimer >= 5)
+            if (gasTimer >= 10)
             {
                 Vector3 landingPoint = new Vector3(206, 82, -113.5f);
                 Vector3 runway1Position = new Vector3(-4.2f, 2, -17.8f);
@@ -124,10 +124,11 @@ public class Plane : MonoBehaviour
             }
 
             // for testing taking off
-            if (gasTimer >= 40 && currentState == PlaneState.PARKING)
+            if (gasTimer >= 20 && currentState == PlaneState.PARKING)
             {
                 Vector3 startPoint1 = new Vector3(122, 2, -73);
-                takeOff(desiredHeight, startPoint1);
+                Vector3 runway1Position = new Vector3(-4.2f, 2, -17.8f);
+                takeOff(desiredHeight, startPoint1, runway1Position);
             }
         }
         #endregion
@@ -189,7 +190,8 @@ public class Plane : MonoBehaviour
     /// </summary>
     /// <param name="desiredHeight">the desired height of this plane will reach after taking-off is done</param>
     /// <param name="startPoint">the start point of the runway for takingoff</param>
-    public void takeOff(float desiredHeight, Vector3 startPoint)
+    /// <param name="runwayPosition">The position of the center of the corresponding runway for the landing point.</param>
+    public void takeOff(float desiredHeight, Vector3 startPoint, Vector3 runwayPosition)
     {
         // can only perform take off when the plane is parking
         if(currentState == PlaneState.PARKING)
@@ -198,6 +200,10 @@ public class Plane : MonoBehaviour
 
             // teleport to a run way
             this.transform.position = startPoint;
+            // calculate the direction of the runway
+            Vector3 direction = (runwayPosition - this.transform.position).normalized;
+            // face to the runway
+            faceTo(direction);
 
             currentState = PlaneState.TAKING_OFF;
             currentMovingCoroutine = StartCoroutine(SmoothTakeOff(desiredHeight));  // start the coroutine
@@ -451,7 +457,7 @@ public class Plane : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // when this plane is colliding with another plane
-        if(collision.gameObject.tag == "Plane")
+        if(collision.gameObject.tag == "Plane" && this.currentState != PlaneState.DESTROYED)
         {
             // Stop the FollowPath coroutine
             StopCoroutine(currentMovingCoroutine);
