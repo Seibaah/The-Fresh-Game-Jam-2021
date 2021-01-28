@@ -11,14 +11,17 @@ public class Plane : MonoBehaviour
     public float slidingForce = 12f;  // the force applyig to this plane when sliding on the ground
     public float slidingDistance = 30f;  // the distance of sliding
     public float circlingSpeed = 40f;   // the angular speed of circling (degrees/second).
-    public float gas_limit_time = 40f;  // the time (in seconds) before this plane becomes out of gas
+
     [Header("Test")]
     public bool testMode = false;  // turn on/off the test mode for landing and taking-off
 
+    public PlaneState currentState { get; set; }  // the current state of this plane
+    public float gas_limit_time { get; set; }  // the time (in seconds) before this plane becomes out of gas
     // Private fields:
-    private PlaneState currentState { get; set; }  // the current state of this plane
     private Rigidbody rb;  // the rigidbody component of this plane
     private ParkingSpotManager psManager;  // the instance of ParkingSpotManager script
+    private TaskScheduler taskScheduler;  // the instance of TaskScheduler script
+    private PlaneTask planeTask;
 
     // Variable for the plane motion:
     private Vector3 prevPosition;  // used for adjusting facing direction
@@ -37,8 +40,12 @@ public class Plane : MonoBehaviour
     {
         // initialize the variable fields
         rb = this.GetComponent<Rigidbody>();
-        currentState = PlaneState.START;  // initial state
         psManager = GameObject.Find("ParkingSystem").GetComponent<ParkingSpotManager>();  // Find instance of ParkingSpotManager script
+        taskScheduler = GameObject.Find("TaskScheduler").GetComponent<TaskScheduler>();
+        planeTask = this.gameObject.GetComponent<PlaneTask>();
+
+        currentState = PlaneState.START;  // initial state
+        gas_limit_time = planeTask.gasTime;  // get the gas time from the task script
     }
 
     // FixedUpdate is called once per frame
@@ -106,7 +113,7 @@ public class Plane : MonoBehaviour
         if(testMode)
         {
             // for testing landing
-            if (gasTimer >= 5)
+            if (gasTimer >= 10)
             {
                 Vector3 landingPoint = new Vector3(206, 82, -113.5f);
                 Vector3 runway1Position = new Vector3(-4.2f, 2, -17.8f);
@@ -117,10 +124,11 @@ public class Plane : MonoBehaviour
             }
 
             // for testing taking off
-            if (gasTimer >= 40 && currentState == PlaneState.PARKING)
+            if (gasTimer >= 20 && currentState == PlaneState.PARKING)
             {
                 Vector3 startPoint1 = new Vector3(122, 2, -73);
-                takeOff(desiredHeight, startPoint1);
+                Vector3 runway1Position = new Vector3(-4.2f, 2, -17.8f);
+                takeOff(desiredHeight, startPoint1, runway1Position);
             }
         }
         #endregion
@@ -140,9 +148,9 @@ public class Plane : MonoBehaviour
             StopCoroutine(currentMovingCoroutine);
             this.currentState = PlaneState.DESTROYED;
             this.rb.useGravity = true;  // apply gravity
-            // TODO: notify the task scheduler
 
-
+            // Notify the task scheduler
+            taskScheduler.planeCrashes();
         }
     }
 
@@ -182,7 +190,8 @@ public class Plane : MonoBehaviour
     /// </summary>
     /// <param name="desiredHeight">the desired height of this plane will reach after taking-off is done</param>
     /// <param name="startPoint">the start point of the runway for takingoff</param>
-    public void takeOff(float desiredHeight, Vector3 startPoint)
+    /// <param name="runwayPosition">The position of the center of the corresponding runway for the landing point.</param>
+    public void takeOff(float desiredHeight, Vector3 startPoint, Vector3 runwayPosition)
     {
         // can only perform take off when the plane is parking
         if(currentState == PlaneState.PARKING)
@@ -191,6 +200,10 @@ public class Plane : MonoBehaviour
 
             // teleport to a run way
             this.transform.position = startPoint;
+            // calculate the direction of the runway
+            Vector3 direction = (runwayPosition - this.transform.position).normalized;
+            // face to the runway
+            faceTo(direction);
 
             currentState = PlaneState.TAKING_OFF;
             currentMovingCoroutine = StartCoroutine(SmoothTakeOff(desiredHeight));  // start the coroutine
@@ -444,7 +457,7 @@ public class Plane : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // when this plane is colliding with another plane
-        if(collision.gameObject.tag == "Plane")
+        if(collision.gameObject.tag == "Plane" && this.currentState != PlaneState.DESTROYED)
         {
             // Stop the FollowPath coroutine
             StopCoroutine(currentMovingCoroutine);
@@ -453,10 +466,8 @@ public class Plane : MonoBehaviour
             this.currentState = PlaneState.DESTROYED;  // change the plane state
             this.rb.useGravity = true;  // apply gravity
 
-
-            // TODO: notify the task scheduler
-
-
+            // Notify the task scheduler
+            taskScheduler.planeCrashes();
         }
     }
 }
