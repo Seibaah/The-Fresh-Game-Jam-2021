@@ -113,7 +113,7 @@ public class Plane : MonoBehaviour
         if(testMode)
         {
             // for testing landing
-            if (gasTimer >= 10)
+            if (gasTimer >= 5)
             {
                 Vector3 landingPoint = new Vector3(206, 82, -113.5f);
                 Vector3 runway1Position = new Vector3(-4.2f, 2, -17.8f);
@@ -124,7 +124,7 @@ public class Plane : MonoBehaviour
             }
 
             // for testing taking off
-            if (gasTimer >= 20 && currentState == PlaneState.PARKING)
+            if (gasTimer >= 400 && currentState == PlaneState.PARKING)
             {
                 Vector3 startPoint1 = new Vector3(122, 2, -73);
                 Vector3 runway1Position = new Vector3(-4.2f, 2, -17.8f);

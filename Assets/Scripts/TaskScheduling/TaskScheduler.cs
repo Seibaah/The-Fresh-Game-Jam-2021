@@ -71,6 +71,7 @@ public class TaskScheduler : MonoBehaviour
         if(planeCrashCounter > maxPlaneCrashes)
         {
             // trigger game over
+            gameOverScript.gameObject.SetActive(true);
             gameOverScript.GameOver();
         }
     }
