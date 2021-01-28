@@ -6,7 +6,7 @@ using UnityEngine;
  * @author Denis
  * Code implementation from Greg Dev Stuff at https://www.youtube.com/watch?v=ZBuGdGQiPj0
  */
-public class UFOminigame : MonoBehaviour
+public class UFOminigame : Task
 {
     [SerializeField] Transform topPivot;
     [SerializeField] Transform bottomPivot;
@@ -34,10 +34,18 @@ public class UFOminigame : MonoBehaviour
 
     [SerializeField] Transform progressBarContainer;
 
-    [SerializeField] float failTimer = 5f;
+    [SerializeField] float failTimer = 10f;
+
+    public GameObject checkStatus;
+    public GameObject warningStatus;
+    public GameObject miniGame;
+    public bool isPlaying = false;
+
+    public bool hasFailed = false;
 
     private void Start()
     {
+        ufoPos = 0.75f;
         Resize();
     }
 
@@ -53,9 +61,12 @@ public class UFOminigame : MonoBehaviour
 
     void Update()
     {
-        Ufo();
-        Target();
-        ProgressCheck();
+        if (isPlaying == true)
+        {
+            Ufo();
+            Target();
+            ProgressCheck();
+        }
     }
 
     void ProgressCheck()
@@ -75,19 +86,34 @@ public class UFOminigame : MonoBehaviour
         {
             targetProgress -= targetProgressDegradationPower * Time.deltaTime;
 
-            failTimer -= Time.deltaTime;
+            /*failTimer -= Time.deltaTime;
             if (failTimer < 0f)
             {
                 Debug.Log("You lost");
-            }
+            }*/
         }
 
         if (targetProgress >= 1f)
         {
-            Debug.Log("You won");
+            ResetGame(ls);
+
+            TaskCompleted();
         }
 
         targetProgress = Mathf.Clamp(targetProgress, 0f, 1f);
+    }
+
+    void ResetGame(Vector3 ls)
+    {
+        StopAllCoroutines();
+        isPlaying = false;
+        checkStatus.SetActive(true);
+        miniGame.SetActive(false);
+
+        targetPos = 0;
+        targetProgress = 0f;
+        ls.y = targetProgress;
+        progressBarContainer.localScale = ls;
     }
 
     void Target()
@@ -109,9 +135,6 @@ public class UFOminigame : MonoBehaviour
             targetPullVelocity = 0f;
         }
 
-        //Debug.Log("Pos" + targetPos);
-        //Debug.Log("Vel" + targetPullVelocity);
-
         targetPos = Mathf.Clamp(targetPos, targetSize/2, 1 - targetSize/2);
         target.position = Vector3.Lerp(bottomPivot.position, topPivot.position, targetPos);
     }
@@ -128,5 +151,28 @@ public class UFOminigame : MonoBehaviour
 
         ufoPos = Mathf.SmoothDamp(ufoPos, ufoDest, ref ufoSpeed, smoothMotion);
         ufo.position = Vector3.Lerp(bottomPivot.position, topPivot.position, ufoPos);
+    }
+
+    public override void TaskSetup()
+    {
+        checkStatus.SetActive(false);
+        miniGame.SetActive(false);
+        warningStatus.SetActive(true);
+    }
+
+    public void PressStart()
+    {
+        warningStatus.SetActive(false);
+        miniGame.SetActive(true);
+        isPlaying = true;
+        StartCoroutine(MinigameTimer());
+    }
+
+    IEnumerator MinigameTimer()
+    {
+        yield return new WaitForSeconds(failTimer);
+
+        hasFailed = true;
+        //TODO: link to TS
     }
 }

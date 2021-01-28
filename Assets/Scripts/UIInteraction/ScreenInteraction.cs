@@ -16,9 +16,6 @@ public class ScreenInteraction : MonoBehaviour {
     private EventSystem mEventSystem;
     private Button ExitButton;
 
-    [SerializeField] private int screenID;
-    [SerializeField] private GameObject myCanvas;
-
     public void Start() {
         if (HoveringCamera == null) Debug.Log("ScreenInteraction @ " + this.name + " : HoveringCamera not specified");
         if (ExitCamera == null) Debug.Log("ScreenInteraction @ " + this.name + " : ExitCamera not specified");
@@ -28,14 +25,6 @@ public class ScreenInteraction : MonoBehaviour {
         ExitButton = this.transform.Find("ExitButton").gameObject.GetComponent<Button>();
         ExitButton.onClick.AddListener(onExitButtonClicked);
 
-        //left screen = 0; right screen = 1
-        if (gameObject.name.Equals("RightCanvas")){
-            screenID = 1;
-        }
-        else
-        {
-            screenID = 0;
-        }
     }
 
     public void OnStartInteraction() {
@@ -44,14 +33,6 @@ public class ScreenInteraction : MonoBehaviour {
 
         // otherwise, switch to this camera
         switchToCamera(HoveringCamera);
-
-        //load ufo target minigame
-        if (screenID == 1)
-        {
-            GameObject canvas = Instantiate(myCanvas, gameObject.transform);
-            canvas.transform.localScale = new Vector3(0.3f, 0.3f, 1f);
-            canvas.transform.localPosition = new Vector3(0, 0, 0);
-        }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -63,12 +44,6 @@ public class ScreenInteraction : MonoBehaviour {
         if (targetCamera == null) targetCamera = Camera.main;
 
         switchToCamera(targetCamera);
-
-        //load ufo target minigame
-        if (screenID == 1)
-        {
-            Destroy(myCanvas);
-        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

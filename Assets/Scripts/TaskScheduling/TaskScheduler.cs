@@ -52,6 +52,7 @@ public class TaskScheduler : MonoBehaviour
         UpdateTaskListText();
     }
 
+    //TODO: make TS rand choice
     //find first available task, return null if there are none
     public Task FindAvailableTask() {
         foreach (Task task in allTasks) {
