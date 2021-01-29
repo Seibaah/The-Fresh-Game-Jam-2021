@@ -21,6 +21,9 @@ public class Pause_menu : MonoBehaviour
 {
     public GameObject pauseMenuUI;
 
+    public GameObject mainMenu;
+    public GameObject howToPlayMenu;
+
     /*
      * @desc activate/deactivate pause menu with Esc key
      */
@@ -57,6 +60,24 @@ public class Pause_menu : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    /*
+     * @desc shows game instructions
+     */
+    public void HowToPlay()
+    {
+        mainMenu.SetActive(false);
+        howToPlayMenu.SetActive(true);
+    }
+
+    /*
+     * @desc returns to main menu
+     */
+    public void Return()
+    {
+        mainMenu.SetActive(true);
+        howToPlayMenu.SetActive(false);
     }
 
     /*
