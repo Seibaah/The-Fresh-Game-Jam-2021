@@ -12,7 +12,13 @@ public class MinimapInteraction : MonoBehaviour {
     public int PathLength = 3;
 
     private List<Vector3> ChosenPath;
+    private List<GameObject> ChosenPathObjs;
     private GameObject ChosenPlane;
+
+    public void Start()
+    {
+        ChosenPathObjs = new List<GameObject>();
+    }
 
     private void Update(){
        if (Input.GetMouseButtonDown(0)){
@@ -56,16 +62,33 @@ public class MinimapInteraction : MonoBehaviour {
                             GameObject obj = hit.transform.gameObject;
                             Debug.Log("Object hit" + obj);
                             if (ChosenPath == null) ChosenPath = new List<Vector3>();
-                            if (obj.tag == PlaneTag) ChosenPlane = obj;
-                            else if (obj.tag == WayPointTag) ChosenPath.Add(obj.transform.position);
 
-                            if (ChosenPlane != null && ChosenPath.Count >= PathLength) applyChosenPathToPlane();
+                            if (obj.tag == PlaneTag)
+                            {
+                                ChosenPlane = obj;
+                                obj.GetComponent<SelectOptionPlane>().onSelected();
+                            }
+
+                            else if (obj.tag == WayPointTag)
+                            {
+                                ChosenPath.Add(obj.transform.position);
+                                ChosenPathObjs.Add(obj);
+                                obj.GetComponent<SelectOption>().onSelected();
+                            }
+
+                            if (ChosenPlane != null && ChosenPath.Count >= PathLength)
+                            {
+                                applyChosenPathToPlane();
+                            }
+                                
+                                
                         }
 
                         break;
                     }
                     
                 }
+
             } else return;
         }
 
@@ -76,9 +99,23 @@ public class MinimapInteraction : MonoBehaviour {
         Debug.Log("Guiding plane " + ChosenPlane);
 
         Plane ChosenPlaneComp = ChosenPlane.GetComponent<Plane>();
-        if (ChosenPlaneComp != null) ChosenPlaneComp.followPath(new List<Vector3>(ChosenPath), false, new Vector3(0, 0, 0));
+        ChosenPlane.GetComponent<SelectOptionPlane>().onReset();
+
+        if (ChosenPathObjs[ChosenPathObjs.Count - 1].GetComponent<SelectOption>().isLandingPoint == true && ChosenPlaneComp != null)
+        {
+            ChosenPlaneComp.followPath(new List<Vector3>(ChosenPath), true, ChosenPathObjs[ChosenPathObjs.Count - 1].GetComponent<LandingPoint>().Runway.transform.position);
+        } else
+        {
+            if (ChosenPlaneComp != null) ChosenPlaneComp.followPath(new List<Vector3>(ChosenPath), false, new Vector3(0, 0, 0));
+        }
+
+        foreach(GameObject obj in ChosenPathObjs)
+        {
+            obj.GetComponent<SelectOption>().onReset();
+        }
 
         ChosenPlane = null;
+        ChosenPathObjs.Clear();
         ChosenPath.Clear();
     }
 }

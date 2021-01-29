@@ -44,13 +44,8 @@ public class PathMinigame : Task
             gameStatus.color = new Color32(52,255,52,255);
             gameStatus.text = "COMPLETE";
             TaskCompleted(); //alert task scheduler that minigame is completed
-            StartCoroutine(TurnOffScreen());
+            screen.SetActive(false);
         }
 
-    }
-
-    IEnumerator TurnOffScreen() {
-        yield return new WaitForSeconds(2.0f);
-        screen.SetActive(false);
     }
 }
