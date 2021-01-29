@@ -17,6 +17,10 @@ public class Plane : MonoBehaviour
 
     public PlaneState currentState { get; set; }  // the current state of this plane
     public float gas_limit_time { get; set; }  // the time (in seconds) before this plane becomes out of gas
+
+    [HideInInspector]
+    public float gasTimer = 0;  // the timer for counting the gas of this plane
+
     // Private fields:
     private Rigidbody rb;  // the rigidbody component of this plane
     private ParkingSpotManager psManager;  // the instance of ParkingSpotManager script
@@ -26,7 +30,7 @@ public class Plane : MonoBehaviour
     // Variable for the plane motion:
     private Vector3 prevPosition;  // used for adjusting facing direction
     private Coroutine currentMovingCoroutine;  // the current FollowPath coroutine or the Circling coroutine
-    private float gasTimer = 0;  // the timer for counting the gas of this plane
+    
     
 
     // Just for testing
@@ -466,8 +470,21 @@ public class Plane : MonoBehaviour
             this.currentState = PlaneState.DESTROYED;  // change the plane state
             this.rb.useGravity = true;  // apply gravity
 
+            // destroy the plane after a delay (7 seconds)
+            Destroy(this.gameObject, 7f);
+
             // Notify the task scheduler
             taskScheduler.planeCrashes();
         }
+
+        /*
+        // when this plane is touching the ground and is destroyed
+        if (collision.gameObject.tag == "Terrain" && this.currentState == PlaneState.DESTROYED)
+        {
+            // destroy the plane
+            Destroy(this.gameObject);
+        }*/
+
+
     }
 }

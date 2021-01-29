@@ -24,6 +24,8 @@ public class Pause_menu : MonoBehaviour
     public GameObject mainMenu;
     public GameObject howToPlayMenu;
 
+    public GameObject inGameUI;
+
     /*
      * @desc activate/deactivate pause menu with Esc key
      */
@@ -45,6 +47,8 @@ public class Pause_menu : MonoBehaviour
         Time.timeScale = 1f;
         Game_state.isGamePaused = false;
 
+        inGameUI.SetActive(true);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -57,6 +61,8 @@ public class Pause_menu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         Game_state.isGamePaused = true;
+
+        inGameUI.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -88,6 +94,8 @@ public class Pause_menu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         Game_state.isGamePaused = true;
+
+        inGameUI.SetActive(true);
 
         SceneManager.LoadScene(0);
     }
