@@ -34,14 +34,11 @@ public class UFOminigame : Task
 
     [SerializeField] Transform progressBarContainer;
 
-    [SerializeField] float failTimer = 10f;
-
     public GameObject checkStatus;
     public GameObject warningStatus;
     public GameObject miniGame;
     public bool isPlaying = false;
 
-    public bool hasFailed = false;
 
     private void Start()
     {
@@ -85,12 +82,6 @@ public class UFOminigame : Task
         else
         {
             targetProgress -= targetProgressDegradationPower * Time.deltaTime;
-
-            /*failTimer -= Time.deltaTime;
-            if (failTimer < 0f)
-            {
-                Debug.Log("You lost");
-            }*/
         }
 
         if (targetProgress >= 1f)
@@ -165,14 +156,5 @@ public class UFOminigame : Task
         warningStatus.SetActive(false);
         miniGame.SetActive(true);
         isPlaying = true;
-        StartCoroutine(MinigameTimer());
-    }
-
-    IEnumerator MinigameTimer()
-    {
-        yield return new WaitForSeconds(failTimer);
-
-        hasFailed = true;
-        //TODO: link to TS
     }
 }
