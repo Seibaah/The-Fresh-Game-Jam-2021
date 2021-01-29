@@ -28,9 +28,12 @@ public class TaskScheduler : MonoBehaviour
     public GameObject gameOverMenu;
     public int maxPlaneCrashes = 3;  // the limit of plane crashes allowed (if > this limit, game over)
     public TMP_Text numCrashesMessage;
+    public TMP_Text scoreMessage;
 
     private float timeElapsed = 0f;
     private float planeSpawningTimeElapsed = 0f;
+
+    private int score = 0;
 
     private Restart_menu gameOverScript;
 
@@ -109,6 +112,14 @@ public class TaskScheduler : MonoBehaviour
         if (!taskEvent.IsSuccessful()) {
             removeLife();
         }
+        else if(taskEvent.IsSuccessful())
+        {
+            // update score
+            if(taskEvent.task.taskName == "Plane Landing")
+                calculateScore(20);
+            else
+                calculateScore(10);
+        }
 
         taskEventList.Remove(taskEvent);
         Destroy(taskEvent.gameObject);
@@ -172,6 +183,12 @@ public class TaskScheduler : MonoBehaviour
         }
         else
             numCrashesMessage.SetText(lives + " lives left!");
+    }
+
+    private void calculateScore(int taskScore)
+    {
+        score += taskScore;
+        scoreMessage.SetText("Score: " + score);
     }
 
 }
