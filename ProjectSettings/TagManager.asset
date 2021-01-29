@@ -7,7 +7,6 @@ TagManager:
   - Plane
   - UtilityCamera
   - WayPoint
-  - Terrain
   layers:
   - Default
   - TransparentFX
@@ -19,7 +18,7 @@ TagManager:
   - Plane
   - WorldUI
   - WayPoint
-  - 
+  - PlaneGas
   - 
   - 
   - 
