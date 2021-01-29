@@ -68,6 +68,8 @@ public class TaskScheduler : MonoBehaviour
             planeSpawningTimeElapsed = 0;
         }
 
+        UpdateTaskListText();
+
         /* check for game over state
         if(planeCrashCounter > maxPlaneCrashes)
         {
@@ -86,7 +88,7 @@ public class TaskScheduler : MonoBehaviour
         newTaskEvent.message = "Complete " + newTaskEvent.task.taskName;
 
         // if the task is the plane landing task, make the time to complete be the "out of gas time" of the plane
-        if (task.taskName == "PlaneLandingTask")
+        if (task.taskName == "Plane Landing")
         {
             newTaskEvent.timeToComplete = Random.Range(gas_limit_time_min, gas_limit_time_max);
             ((PlaneTask)task).gasTime = newTaskEvent.timeToComplete;
@@ -144,7 +146,8 @@ public class TaskScheduler : MonoBehaviour
         string taskListString = "";
         foreach (TaskEvent taskEvent in taskEventList) {
             taskListString += " - ";
-            taskListString += taskEvent.message; 
+            taskListString += taskEvent.message;
+            taskListString += " (" +(int)taskEvent.timeToComplete + ")";
             taskListString += "\n";
         }
         taskListText.text = taskListString;
