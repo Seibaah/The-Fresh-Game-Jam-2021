@@ -13,11 +13,11 @@ public class Restart_menu : MonoBehaviour
     public GameObject restartMenuUI;
 
     /*
-     * @desc press F1 to access menu
+     * @desc restart menu 
      */
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1) && !Game_state.isGamePaused)
+        if (Game_state.isGameOver == true)
         {
             GameOver();
         }
@@ -30,7 +30,7 @@ public class Restart_menu : MonoBehaviour
     {
         restartMenuUI.SetActive(true);
         Time.timeScale = 0f;
-        Game_state.isGameOver = true;
+        //Game_state.isGameOver = true;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -42,11 +42,11 @@ public class Restart_menu : MonoBehaviour
      */
     public void Restart()
     {
-        SceneManager.LoadScene(1);
-
+        Game_state.isGameOver = false;
         restartMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        Game_state.isGameOver = false;
+        
+        SceneManager.LoadScene(1);
     }
 
     /*
