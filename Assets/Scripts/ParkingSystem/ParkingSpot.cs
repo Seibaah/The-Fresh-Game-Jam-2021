@@ -5,6 +5,7 @@ using UnityEngine;
 public class ParkingSpot : MonoBehaviour
 {
     public bool isOccupied { get; set; }  // whether this parking spot is currently occupied by a plane
+    public Plane parkedPlane { get; set; }  // the plane script instance on this parking spot
 
     private Vector3 centerPosition;  // store the center position of this parking spot
 
@@ -39,6 +40,7 @@ public class ParkingSpot : MonoBehaviour
         if(collision.gameObject.tag == "Plane")
         {
             isOccupied = true;
+            parkedPlane = collision.gameObject.GetComponent<Plane>();
         }
     }
 
@@ -47,6 +49,7 @@ public class ParkingSpot : MonoBehaviour
         if (collision.gameObject.tag == "Plane")
         {
             isOccupied = false;
+            parkedPlane = null;
         }
     }
 }
