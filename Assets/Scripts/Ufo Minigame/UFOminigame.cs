@@ -44,6 +44,8 @@ public class UFOminigame : Task
     {
         ufoPos = 0.75f;
         Resize();
+
+        taskEndDelegate = TaskEndSetup;
     }
 
     void Resize()
@@ -96,10 +98,10 @@ public class UFOminigame : Task
 
     void ResetGame(Vector3 ls)
     {
-        StopAllCoroutines();
         isPlaying = false;
         checkStatus.SetActive(true);
         miniGame.SetActive(false);
+        warningStatus.SetActive(false);
 
         targetPos = 0;
         targetProgress = 0f;
@@ -157,4 +159,9 @@ public class UFOminigame : Task
         miniGame.SetActive(true);
         isPlaying = true;
     }
+
+    public void TaskEndSetup() {
+        ResetGame(progressBarContainer.localScale);
+    }
+
 }
