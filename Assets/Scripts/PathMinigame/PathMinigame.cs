@@ -51,6 +51,8 @@ public class PathMinigame : Task
 
     IEnumerator TurnOffScreen() {
         yield return new WaitForSeconds(2.0f);
-        screen.SetActive(false);
+        if (!this.IsActive()) {
+            screen.SetActive(false);
+        }
     }
 }
