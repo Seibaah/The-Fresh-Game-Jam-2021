@@ -7,6 +7,10 @@ public abstract class Task : MonoBehaviour
     public string taskName;
     public delegate void TaskCompleteDelegate();
     public TaskCompleteDelegate taskCompleteDelegate;
+
+    public delegate void TaskEndDelegate();
+    public TaskEndDelegate taskEndDelegate;
+
     private bool active; //true when task is used by a task event 
 
     public abstract void TaskSetup(); //setup task so that it is ready to be played
@@ -25,6 +29,9 @@ public abstract class Task : MonoBehaviour
 
     public void TaskEnd() {
         active = false;
+        if (taskEndDelegate != null) {
+            taskEndDelegate();
+        }
     }
 
     public bool IsActive() {

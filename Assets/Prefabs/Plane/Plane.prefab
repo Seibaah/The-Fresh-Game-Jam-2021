@@ -1545,6 +1545,7 @@ MonoBehaviour:
   mPlane: {fileID: 462227606}
   mPropellerMotor: {fileID: 8340133011213526156}
   mGasSlider: {fileID: 8120654207483826966}
+  GasCanvas: {fileID: 7449850196025198382}
 --- !u!1 &6638720782088937393
 GameObject:
   m_ObjectHideFlags: 0

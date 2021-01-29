@@ -30,8 +30,6 @@ public class Plane : MonoBehaviour
     // Variable for the plane motion:
     private Vector3 prevPosition;  // used for adjusting facing direction
     private Coroutine currentMovingCoroutine;  // the current FollowPath coroutine or the Circling coroutine
-    
-    
 
     // Just for testing
     private float desiredHeight = 100f;  // the desired height for take off action

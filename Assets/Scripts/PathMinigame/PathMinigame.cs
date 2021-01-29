@@ -15,6 +15,8 @@ public class PathMinigame : Task
         foreach (Connector c in connectors) {
             c.notifyCorrectStateDelegate = ConnectorComplete;
         }
+
+        taskEndDelegate = TaskEndSetup;
     }
 
     //prepare the minigame to be played
@@ -47,5 +49,11 @@ public class PathMinigame : Task
             screen.SetActive(false);
         }
 
+    }
+
+    public void TaskEndSetup() {
+        gameStatus.color = new Color32(52,255,52,255);
+        gameStatus.text = "COMPLETE";
+        screen.SetActive(false);
     }
 }
