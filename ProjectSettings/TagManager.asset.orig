@@ -4,7 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Plane
   - UtilityCamera
+  - WayPoint
   layers:
   - Default
   - TransparentFX
@@ -12,11 +14,11 @@ TagManager:
   - 
   - Water
   - UI
-  - MiniMap
+  - MiiniMap
   - Plane
   - WorldUI
-  - 
-  - 
+  - WayPoint
+  - PlaneGas
   - 
   - 
   - 

@@ -12,7 +12,7 @@ public class PropellerMotor : MonoBehaviour
     {
         if (Propeller != null)
         {
-            Propeller.transform.Rotate(0f, -90f * PropellerSpeedCoefficient, 0f, Space.Self);
+            Propeller.transform.Rotate(0f, 90f * PropellerSpeedCoefficient, 0f, Space.Self);
         }
     }
 }
