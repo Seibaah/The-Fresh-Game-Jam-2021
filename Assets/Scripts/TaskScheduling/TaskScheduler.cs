@@ -19,6 +19,7 @@ public class TaskScheduler : MonoBehaviour
     [Header("Plane Generation variables")]
     public GameObject planePrefab;
     public GameObject spawningPoint;  // the spawning point of the plane
+    public int lives = 10;  // the counter for counting the plane crashes/task failures
     public float spawnPlanesTimeInterval;
     public float gas_limit_time_min = 25f;  // the min of gas limit time
     public float gas_limit_time_max = 40f;  // the max of gas limit time
@@ -31,12 +32,12 @@ public class TaskScheduler : MonoBehaviour
     private float timeElapsed = 0f;
     private float planeSpawningTimeElapsed = 0f;
 
-    private int planeCrashCounter = 0;  // the counter for counting the plane crashes
     private Restart_menu gameOverScript;
 
     private void Start()
     {
         gameOverScript = gameOverMenu.GetComponent<Restart_menu>();
+        numCrashesMessage.SetText(lives + " lives left!");
     }
 
     void Update()
@@ -67,13 +68,14 @@ public class TaskScheduler : MonoBehaviour
             planeSpawningTimeElapsed = 0;
         }
 
-        // check for game over state
+        /* check for game over state
         if(planeCrashCounter > maxPlaneCrashes)
         {
             // trigger game over
             gameOverScript.gameObject.SetActive(true);
             gameOverScript.GameOver();
         }
+        */
     }
 
     private TaskEvent InstantiateTaskEvent(Task task) {
@@ -101,18 +103,38 @@ public class TaskScheduler : MonoBehaviour
 
     //takes a TaskEvent and removes it from the list, noting whether or not it was succesful
     public void TaskEventFinished(TaskEvent taskEvent) {
-        print(taskEvent.name + " was successful: " + taskEvent.IsSuccessful());
+
+        if (!taskEvent.IsSuccessful()) {
+            removeLife();
+        }
+
         taskEventList.Remove(taskEvent);
         Destroy(taskEvent.gameObject);
         UpdateTaskListText();
     }
 
 
-    //find first available task, return null if there are none
-    public Task FindAvailableTask() {
+    /*find first available task, return null if there are none
+    public Task FindFirstAvailableTask() {
         foreach (Task task in allTasks) {
             if (!task.IsActive()) {
                 return task;
+            }
+        }
+        return null;
+    }*/
+
+    //randomly iterates through all tasks to find available task, returns null if there are none
+    public Task FindAvailableTask() {
+        int n = allTasks.Count;
+        for (int i = 0; i < n; i++) {
+            int r = i + Random.Range(0, n - i);
+            Task t = allTasks[r];
+            allTasks[r] = allTasks[i];
+            allTasks[i] = t;
+
+            if (!allTasks[i].IsActive()) {
+                return t;
             }
         }
         return null;
@@ -134,11 +156,19 @@ public class TaskScheduler : MonoBehaviour
     /// </summary>
     public void planeCrashes()
     {
-        planeCrashCounter++;
-        if(planeCrashCounter > maxPlaneCrashes)
-            numCrashesMessage.SetText(planeCrashCounter + " planes has crashed!\nGame Over!");
+        removeLife();
+    }
+
+
+    private void removeLife() {
+        lives--;
+        if(lives <= 0) {
+            gameOverScript.gameObject.SetActive(true);
+            gameOverScript.GameOver();
+            numCrashesMessage.SetText(lives + " lives left!\nGame Over!");
+        }
         else
-            numCrashesMessage.SetText(planeCrashCounter + " planes has crashed!");
+            numCrashesMessage.SetText(lives + " lives left!");
     }
 
 }
