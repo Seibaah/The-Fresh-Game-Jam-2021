@@ -33,7 +33,7 @@ public class Restart_menu : MonoBehaviour
         restartMenuUI.SetActive(true);
         Time.timeScale = 0f;
 
-        inGameUI.SetActive(false);
+        //inGameUI.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -49,7 +49,7 @@ public class Restart_menu : MonoBehaviour
         restartMenuUI.SetActive(false);
         Time.timeScale = 1f;
 
-        inGameUI.SetActive(true);
+        //inGameUI.SetActive(true);
 
         SceneManager.LoadScene(1);
     }
@@ -59,7 +59,7 @@ public class Restart_menu : MonoBehaviour
     */
     public void LoadMenu()
     {
-        inGameUI.SetActive(true);
+        //inGameUI.SetActive(true);
 
         SceneManager.LoadScene(0);
 
