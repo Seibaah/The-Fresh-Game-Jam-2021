@@ -618,11 +618,12 @@ MonoBehaviour:
       m_Calls: []
   m_text: "1) Control the planes through the Minimap monitor. Either:\n\u2022   
     Click on a plane and select 1 waypoint.\n\u2022    Click on as many waypoints
-    as you would like and \n     then click on a plane.\n\n2) Planes can crash between
+    as you would like and \n     then click on a plane. \n\n2) Planes can crash between
     themselves if left unattended or misrouted. Planes can also fall out of the sky
-    if their gas runs out.\n\n3) Minigame events appear on the left-side and right-side
-    screens, and need to be dealt with on time.\n\n4) Failed minigames and lost planes
-    reduce your lives.\nWhen your lives reach 0 you are fired. Game over."
+    if their gas runs out. Planes landing need to be ordered to take off eventually.\n\n3)
+    Minigame events appear on the left-side and right-side screens, and need to be
+    dealt with on time.\n\n4) Failed minigames and lost planes reduce your lives.\nWhen
+    your lives reach 0 you are fired. Game over."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
