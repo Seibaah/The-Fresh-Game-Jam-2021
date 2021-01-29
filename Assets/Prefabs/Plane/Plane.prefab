@@ -1079,7 +1079,7 @@ MonoBehaviour:
   slidingForce: 17
   slidingDistance: 60
   circlingSpeed: 40
-  testMode: 0
+  testMode: 1
 --- !u!114 &1617506294962844682
 MonoBehaviour:
   m_ObjectHideFlags: 0
