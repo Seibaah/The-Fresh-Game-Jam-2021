@@ -12,6 +12,8 @@ public class Restart_menu : MonoBehaviour
 {
     public GameObject restartMenuUI;
 
+    public GameObject inGameUI;
+
     /*
      * @desc restart menu 
      */
@@ -30,7 +32,8 @@ public class Restart_menu : MonoBehaviour
     {
         restartMenuUI.SetActive(true);
         Time.timeScale = 0f;
-        //Game_state.isGameOver = true;
+
+        inGameUI.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -45,7 +48,9 @@ public class Restart_menu : MonoBehaviour
         Game_state.isGameOver = false;
         restartMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        
+
+        inGameUI.SetActive(true);
+
         SceneManager.LoadScene(1);
     }
 
@@ -54,6 +59,8 @@ public class Restart_menu : MonoBehaviour
     */
     public void LoadMenu()
     {
+        inGameUI.SetActive(true);
+
         SceneManager.LoadScene(0);
 
         restartMenuUI.SetActive(false);
