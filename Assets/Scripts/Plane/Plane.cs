@@ -470,8 +470,21 @@ public class Plane : MonoBehaviour
             this.currentState = PlaneState.DESTROYED;  // change the plane state
             this.rb.useGravity = true;  // apply gravity
 
+            // destroy the plane after a delay (7 seconds)
+            Destroy(this.gameObject, 7f);
+
             // Notify the task scheduler
             taskScheduler.planeCrashes();
         }
+
+        /*
+        // when this plane is touching the ground and is destroyed
+        if (collision.gameObject.tag == "Terrain" && this.currentState == PlaneState.DESTROYED)
+        {
+            // destroy the plane
+            Destroy(this.gameObject);
+        }*/
+
+
     }
 }

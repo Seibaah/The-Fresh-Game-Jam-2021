@@ -28,9 +28,12 @@ public class TaskScheduler : MonoBehaviour
     public GameObject gameOverMenu;
     public int maxPlaneCrashes = 3;  // the limit of plane crashes allowed (if > this limit, game over)
     public TMP_Text numCrashesMessage;
+    public TMP_Text scoreMessage;
 
     private float timeElapsed = 0f;
     private float planeSpawningTimeElapsed = 0f;
+
+    private int score = 0;
 
     private Restart_menu gameOverScript;
 
@@ -68,12 +71,15 @@ public class TaskScheduler : MonoBehaviour
             planeSpawningTimeElapsed = 0;
         }
 
+        UpdateTaskListText();
+
         /* check for game over state
         if(planeCrashCounter > maxPlaneCrashes)
         {
             // trigger game over
-            gameOverScript.gameObject.SetActive(true);
-            gameOverScript.GameOver();
+            //gameOverScript.gameObject.SetActive(true);
+            Game_state.isGameOver = true;
+            planeCrashCounter = 0;
         }
         */
     }
@@ -86,7 +92,7 @@ public class TaskScheduler : MonoBehaviour
         newTaskEvent.message = "Complete " + newTaskEvent.task.taskName;
 
         // if the task is the plane landing task, make the time to complete be the "out of gas time" of the plane
-        if (task.taskName == "PlaneLandingTask")
+        if (task.taskName == "Plane Landing")
         {
             newTaskEvent.timeToComplete = Random.Range(gas_limit_time_min, gas_limit_time_max);
             ((PlaneTask)task).gasTime = newTaskEvent.timeToComplete;
@@ -106,6 +112,14 @@ public class TaskScheduler : MonoBehaviour
 
         if (!taskEvent.IsSuccessful()) {
             removeLife();
+        }
+        else if(taskEvent.IsSuccessful())
+        {
+            // update score
+            if(taskEvent.task.taskName == "Plane Landing")
+                calculateScore(20);
+            else
+                calculateScore(10);
         }
 
         taskEventList.Remove(taskEvent);
@@ -144,7 +158,8 @@ public class TaskScheduler : MonoBehaviour
         string taskListString = "";
         foreach (TaskEvent taskEvent in taskEventList) {
             taskListString += " - ";
-            taskListString += taskEvent.message; 
+            taskListString += taskEvent.message;
+            taskListString += " (" +(int)taskEvent.timeToComplete + ")";
             taskListString += "\n";
         }
         taskListText.text = taskListString;
@@ -169,6 +184,12 @@ public class TaskScheduler : MonoBehaviour
         }
         else
             numCrashesMessage.SetText(lives + " lives left!");
+    }
+
+    private void calculateScore(int taskScore)
+    {
+        score += taskScore;
+        scoreMessage.SetText("Score: " + score);
     }
 
 }

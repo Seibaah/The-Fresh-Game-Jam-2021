@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f120409b2d66408a864c1792da71bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskName: PlaneLandingTask
+  taskName: Plane Landing
 --- !u!136 &1834790324
 CapsuleCollider:
   m_ObjectHideFlags: 0
